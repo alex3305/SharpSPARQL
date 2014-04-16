@@ -1,0 +1,21 @@
+SharpSPARQL, a visual C# benchmark tool for SPARQL queries.
+
+Features:
+ Query SPARQL interfaces
+ SPARQL/SPARUL syntax highlighting with FastColoredTextBox
+ Saving and loading of queries
+ Batch run queries
+ Times the results
+ 
+Requirements:
+ Visual Studio 2013 and .net 4.5 for compiling
+
+Usage:
+ Compile and run SharpSPARQL.exe
+
+Limitations:
+ Currently only works with/tested with Virtuoso Universal Server
+ 
+Dependencies:
+ FastColoredTextBox (https://github.com/PavelTorgashov/FastColoredTextBox)
+  - included in this app, so there are extra dll's.

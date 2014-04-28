@@ -98,13 +98,22 @@
 
                 // Escape new lines. 
                 var queryString = WebUtility.UrlEncode(this.Query.SPARQLQuery.Replace("\n", " "));
+                byte[] postData = Encoding.UTF8.GetBytes("query=" + queryString);
 
-                webrequest = WebRequest.Create(
-                    string.Format("{0}/?query={1}&format={2}", this.Query.Endpoint, queryString, "text/turtle")) 
-                    as HttpWebRequest;
+                webrequest = WebRequest.Create(this.Query.Endpoint) as HttpWebRequest;
 
+                webrequest.Accept = "application/sparql-results+json";
+                webrequest.ContentLength = postData.Length;
+                webrequest.ContentType = "application/x-www-form-urlencoded";
+                webrequest.Credentials = CredentialCache.DefaultCredentials;
+                webrequest.Method = "POST";
                 webrequest.Proxy = null; // Very important to eliminate delay in the first request!
                 webrequest.Timeout = 600000; // Timeout of 10 minutes per request :).
+
+                Stream dataStream = webrequest.GetRequestStream();
+                dataStream.Write(postData, 0, postData.Length);
+                dataStream.Close();
+
                 response = webrequest.GetResponse() as HttpWebResponse;
 
                 var stream = response.GetResponseStream();
@@ -119,6 +128,7 @@
             } catch (Exception exc) {
                 this.QueryException = exc;
                 Console.WriteLine(exc.Message);
+                Console.WriteLine(exc.StackTrace);
                 this.QueryTimer.Stop();
             } finally {
                 this.QueryTimer.Stop();
